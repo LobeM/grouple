@@ -4,7 +4,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '@/components/theme';
 import { ReactQueryProvider } from '@/react-query/provider';
 import { ReduxProvider } from '@/redux/provider';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from 'sonner';
 import './globals.css';
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'] });

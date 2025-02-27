@@ -1,5 +1,5 @@
 import React from 'react';
-import BackdropGradient from '../backdrop-gradient';
+import BackdropGradient from '../../../../components/global/backdrop-gradient';
 import GradientText from '@/components/global/gradient-text';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
