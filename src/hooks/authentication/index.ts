@@ -1,14 +1,15 @@
-import { useSignIn, useSignUp } from '@clerk/nextjs';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { SignInSchema } from '@/components/forms/sign-in/schema';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
-import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
-import { SignUpSchema } from '@/components/forms/sign-up/schema';
 import { onSignUpUser } from '@/actions/auth';
+import { SignInSchema } from '@/components/forms/sign-in/schema';
+import { SignUpSchema } from '@/components/forms/sign-up/schema';
+import { useSignIn, useSignUp } from '@clerk/nextjs';
+import { OAuthStrategy } from '@clerk/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
 export const useAuthSignIn = () => {
   const { isLoaded, setActive, signIn } = useSignIn();
@@ -166,4 +167,37 @@ export const useAuthSignUp = () => {
     setCode,
     getValues,
   };
+};
+
+export const useGoogleAuth = () => {
+  const { isLoaded: LoadedSignIn, signIn } = useSignIn();
+  const { isLoaded: LoadedSignUp, signUp } = useSignUp();
+
+  const signInWith = (strategy: OAuthStrategy) => {
+    if (!LoadedSignIn) return;
+    try {
+      return signIn.authenticateWithRedirect({
+        strategy,
+        redirectUrl: '/callback',
+        redirectUrlComplete: '/callback/sign-in',
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const signUpWith = (strategy: OAuthStrategy) => {
+    if (!LoadedSignUp) return;
+    try {
+      return signUp.authenticateWithRedirect({
+        strategy,
+        redirectUrl: '/callback',
+        redirectUrlComplete: '/callback/sign-up',
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return { signInWith, signUpWith };
 };
