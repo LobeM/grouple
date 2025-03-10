@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { GROUPLE_CONSTANTS } from '@/constants';
 import { useAuthSignUp } from '@/hooks/authentication';
 import dynamic from 'next/dynamic';
-import React from 'react';
 
 const OtpInput = dynamic(
   () => import('@/components/global/otp-input').then((mod) => mod.default),
@@ -27,6 +26,8 @@ const SignUpForm = () => {
     setCode,
     getValues,
   } = useAuthSignUp();
+
+  console.log('verifying', verifying);
 
   return (
     <form

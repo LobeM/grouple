@@ -1,5 +1,4 @@
 import { onSignUpUser } from '@/actions/auth';
-import { SignInSchema } from '@/components/forms/sign-in/schema';
 import { SignUpSchema } from '@/components/forms/sign-up/schema';
 import { useSignIn, useSignUp } from '@clerk/nextjs';
 import { OAuthStrategy } from '@clerk/types';
@@ -10,43 +9,45 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { SignInSchema } from '../../components/forms/sign-in/schema';
 
 export const useAuthSignIn = () => {
   const { isLoaded, setActive, signIn } = useSignIn();
   const {
     register,
-    handleSubmit,
     formState: { errors },
     reset,
+    handleSubmit,
   } = useForm<z.infer<typeof SignInSchema>>({
     resolver: zodResolver(SignInSchema),
     mode: 'onBlur',
   });
 
   const router = useRouter();
-
   const onClerkAuth = async (email: string, password: string) => {
     if (!isLoaded)
-      return toast('Error', { description: 'Oops! something went wrong' });
-
+      return toast('Error', {
+        description: 'Oops! something went wrong',
+      });
     try {
       const authenticated = await signIn.create({
         identifier: email,
-        password,
+        password: password,
       });
 
       if (authenticated.status === 'complete') {
         reset();
         await setActive({ session: authenticated.createdSessionId });
-        toast('Success', { description: 'Welcome back!' });
+        toast('Success', {
+          description: 'Welcome back!',
+        });
         router.push('/callback/sign-in');
       }
     } catch (error: any) {
-      if (error.errors[0].code === 'form_password_incorrect') {
+      if (error.errors[0].code === 'form_password_incorrect')
         toast('Error', {
-          description: 'email or password is incorrect try again',
+          description: 'email/password is incorrect try again',
         });
-      }
     }
   };
 
@@ -62,22 +63,22 @@ export const useAuthSignIn = () => {
   return {
     onAuthenticateUser,
     isPending,
-    errors,
     register,
+    errors,
   };
 };
 
 export const useAuthSignUp = () => {
-  const { isLoaded, setActive, signUp } = useSignUp();
+  const { setActive, isLoaded, signUp } = useSignUp();
   const [creating, setCreating] = useState<boolean>(false);
   const [verifying, setVerifying] = useState<boolean>(false);
   const [code, setCode] = useState<string>('');
 
   const {
     register,
-    handleSubmit,
     formState: { errors },
     reset,
+    handleSubmit,
     getValues,
   } = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
@@ -88,8 +89,9 @@ export const useAuthSignUp = () => {
 
   const onGenerateCode = async (email: string, password: string) => {
     if (!isLoaded)
-      return toast('Error', { description: 'Oops! something went wrong' });
-
+      return toast('Error', {
+        description: 'Oops! something went wrong',
+      });
     try {
       if (email && password) {
         await signUp.create({
@@ -103,7 +105,9 @@ export const useAuthSignUp = () => {
 
         setVerifying(true);
       } else {
-        return toast('Error', { description: 'Please fill all the fields' });
+        return toast('Error', {
+          description: 'No fields must be empty',
+        });
       }
     } catch (error) {
       console.error(JSON.stringify(error, null, 2));
@@ -112,7 +116,9 @@ export const useAuthSignUp = () => {
 
   const onInitiateUserRegistration = handleSubmit(async (values) => {
     if (!isLoaded)
-      return toast('Error', { description: 'Oops! something went wrong' });
+      return toast('Error', {
+        description: 'Oops! something went wrong',
+      });
 
     try {
       setCreating(true);
@@ -122,7 +128,7 @@ export const useAuthSignUp = () => {
 
       if (completeSignUp.status !== 'complete') {
         return toast('Error', {
-          description: 'Oops! something went wrong, status is not complete',
+          description: 'Oops! something went wrong, status in complete',
         });
       }
 
@@ -138,12 +144,18 @@ export const useAuthSignUp = () => {
         reset();
 
         if (user.status === 200) {
-          toast('Success', { description: user.message });
-          await setActive({ session: completeSignUp.createdSessionId });
-          router.push('/group/create');
+          toast('Success', {
+            description: user.message,
+          });
+          await setActive({
+            session: completeSignUp.createdSessionId,
+          });
+          router.push(`/group/create`);
         }
         if (user.status !== 200) {
-          toast('Error', { description: user.message + 'action failed' });
+          toast('Error', {
+            description: user.message + 'action failed',
+          });
           router.refresh();
         }
         setCreating(false);
@@ -170,8 +182,8 @@ export const useAuthSignUp = () => {
 };
 
 export const useGoogleAuth = () => {
-  const { isLoaded: LoadedSignIn, signIn } = useSignIn();
-  const { isLoaded: LoadedSignUp, signUp } = useSignUp();
+  const { signIn, isLoaded: LoadedSignIn } = useSignIn();
+  const { signUp, isLoaded: LoadedSignUp } = useSignUp();
 
   const signInWith = (strategy: OAuthStrategy) => {
     if (!LoadedSignIn) return;
@@ -192,12 +204,12 @@ export const useGoogleAuth = () => {
       return signUp.authenticateWithRedirect({
         strategy,
         redirectUrl: '/callback',
-        redirectUrlComplete: '/callback/sign-up',
+        redirectUrlComplete: '/callback/complete',
       });
     } catch (error) {
       console.error(error);
     }
   };
 
-  return { signInWith, signUpWith };
+  return { signUpWith, signInWith };
 };

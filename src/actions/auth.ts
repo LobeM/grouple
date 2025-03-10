@@ -6,7 +6,7 @@ import { currentUser } from '@clerk/nextjs/server';
 export const onAuthenticatedUser = async () => {
   try {
     const clerk = await currentUser();
-    if (!clerk) return { status: 401 };
+    if (!clerk) return { status: 404 };
 
     const user = await client.user.findUnique({
       where: {
@@ -18,17 +18,20 @@ export const onAuthenticatedUser = async () => {
         lastname: true,
       },
     });
-    if (user) {
+    if (user)
       return {
         status: 200,
         id: user.id,
         image: clerk.imageUrl,
         username: `${user.firstname} ${user.lastname}`,
       };
-    }
-    return { status: 401 };
+    return {
+      status: 404,
+    };
   } catch (error) {
-    return { status: 500 };
+    return {
+      status: 400,
+    };
   }
 };
 
@@ -48,18 +51,19 @@ export const onSignUpUser = async (data: {
     if (createdUser) {
       return {
         status: 200,
-        message: 'User created successfully',
+        message: 'User successfully created',
         id: createdUser.id,
       };
     }
+
     return {
       status: 400,
-      message: 'User could not be created! Try again later',
+      message: 'User could not be created! Try again',
     };
   } catch (error) {
     return {
-      status: 500,
-      message: 'Oops! something went wrong',
+      status: 400,
+      message: 'Oops! something went wrong. Try again',
     };
   }
 };
@@ -101,18 +105,19 @@ export const onSignInUser = async (clerkId: string) => {
 
       return {
         status: 200,
+        message: 'User successfully logged in',
         id: loggedInUser.id,
-        message: 'User logged in successfully',
       };
     }
+
     return {
       status: 400,
-      message: 'User could not be logged in! Try again later',
+      message: 'User could not be logged in! Try again',
     };
   } catch (error) {
     return {
-      status: 500,
-      message: 'Oops! something went wrong',
+      status: 400,
+      message: 'Oops! something went wrong. Try again',
     };
   }
 };
