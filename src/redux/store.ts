@@ -2,9 +2,11 @@
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
+import searchReducer from './slices/search-slice';
 
 const rootReducer = combineReducers({
   //add all your reducers here
+  searchReducer,
 });
 
 export const store = configureStore({
