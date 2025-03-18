@@ -6,8 +6,6 @@ type Props = {
   stripeId?: string;
 };
 
-// WIP: connect the use payment hook
-
 const PaymentForm = ({ userId, affiliate, stripeId }: Props) => {
   return <div>PaymentForm</div>;
 };

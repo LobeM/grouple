@@ -1,7 +1,12 @@
 'use client';
 
-// WIP: add stripe elements to the page
+import { useStripeElements } from '@/hooks/payment';
+import { Elements } from '@stripe/react-stripe-js';
 
 export const StripeElements = ({ children }: { children: React.ReactNode }) => {
-  return <div>{children}</div>;
+  const { StripePromise } = useStripeElements();
+
+  const promise = StripePromise();
+
+  return promise && <Elements stripe={promise}>{children}</Elements>;
 };
