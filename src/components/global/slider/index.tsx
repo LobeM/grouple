@@ -1,21 +1,22 @@
-import { Label } from '@/components/ui/label';
-import React from 'react';
+'use client';
+
 import { Autoplay, FreeMode, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperProps } from 'swiper/react';
+import { Label } from '../../ui/label';
 
-type Props = {
+type SliderProps = {
   children: React.ReactNode;
   overlay?: boolean;
   label?: string;
 } & SwiperProps;
 
-const Slider = ({ children, overlay, label, ...rest }: Props) => {
+export const Slider = ({ children, overlay, label, ...rest }: SliderProps) => {
   return (
     <div
       style={{
         maskImage: `linear-gradient(to right,rgba(0, 0, 0, 0),rgba(0, 0, 0, 1) 20%,rgba(0, 0, 0, 1) 80%,rgba(0, 0, 0, 0))`,
       }}
-      className='w-full max-w-full overflow-x-hidden mt-5 relative'
+      className='w-full max-w-full overflow-x-hidden mt-5 relative  '
     >
       {overlay && (
         <>
@@ -30,5 +31,3 @@ const Slider = ({ children, overlay, label, ...rest }: Props) => {
     </div>
   );
 };
-
-export default Slider;

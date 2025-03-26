@@ -3,13 +3,17 @@
 import { cn } from '@/lib/utils';
 import { JSX } from 'react';
 
-type Props = {
+type GroupListItemProps = {
   icon: JSX.Element;
   label: string;
   selected?: string;
 };
 
-const GroupListItem = ({ icon, label, selected }: Props) => {
+export const GroupListItem = ({
+  icon,
+  label,
+  selected,
+}: GroupListItemProps) => {
   return (
     <div
       className={cn(
@@ -22,5 +26,3 @@ const GroupListItem = ({ icon, label, selected }: Props) => {
     </div>
   );
 };
-
-export default GroupListItem;

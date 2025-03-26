@@ -30,10 +30,10 @@ export const FormGenerator = ({
   switch (inputType) {
     case 'input':
       return (
-        <Label className='flex flex-col gap-2' htmlFor={`input-${label}`}>
+        <Label className='flex flex-col gap-2' htmlFor={`input-${name}`}>
           {label && label}
           <Input
-            id={`input-${label}`}
+            id={`input-${name}`}
             type={type}
             placeholder={placeholder}
             className='bg-themeBlack border-themeGray text-themeTextGray'
@@ -52,10 +52,10 @@ export const FormGenerator = ({
       );
     case 'select':
       return (
-        <Label htmlFor={`select-${label}`} className='flex flex-col gap-2'>
+        <Label htmlFor={`select-${name}`} className='flex flex-col gap-2'>
           {label && label}
           <select
-            id={`select-${label}`}
+            id={`select-${name}`}
             className='w-full bg-transparent border-[1px] p-3 rounded-lg'
             {...register(name)}
           >
@@ -83,11 +83,11 @@ export const FormGenerator = ({
       );
     case 'textarea':
       return (
-        <Label className='flex flex-col gap-2' htmlFor={`input-${label}`}>
+        <Label className='flex flex-col gap-2' htmlFor={`input-${name}`}>
           {label && label}
           <Textarea
             className='bg-themeBlack border-themeGray text-themeTextGray'
-            id={`input-${label}`}
+            id={`input-${name}`}
             placeholder={placeholder}
             {...register(name)}
             rows={lines}

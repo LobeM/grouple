@@ -34,7 +34,7 @@ export const useStripeElements = () => {
   return { StripePromise };
 };
 
-export const usePayment = (
+export const usePayments = (
   userId: string,
   affiliate: boolean,
   stripeId?: string
