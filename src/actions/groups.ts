@@ -110,6 +110,85 @@ export const onCreateNewGroup = async (
   }
 };
 
+export const onGetGroupInfo = async (groupId: string) => {
+  try {
+    const user = await onAuthenticatedUser();
+    const group = await client.group.findUnique({
+      where: {
+        id: groupId,
+      },
+    });
+
+    if (group)
+      return {
+        status: 200,
+        group,
+        groupOwner: user.id === group.userId ? true : false,
+      };
+
+    return { status: 404, message: 'Group not found' };
+  } catch (error) {
+    return { status: 500, message: 'Internal server error' };
+  }
+};
+
+export const onGetUserGroups = async (userId: string) => {
+  try {
+    const groups = await client.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        group: {
+          select: {
+            id: true,
+            name: true,
+            icon: true,
+            channel: {
+              where: {
+                name: 'general',
+              },
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+        membership: {
+          select: {
+            Group: {
+              select: {
+                id: true,
+                icon: true,
+                name: true,
+                channel: {
+                  where: {
+                    name: 'general',
+                  },
+                  select: {
+                    id: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (groups && (groups.group.length > 0 || groups.membership.length > 0))
+      return {
+        status: 200,
+        groups: groups.group,
+        members: groups.membership,
+      };
+
+    return { status: 404, message: 'Groups not found' };
+  } catch (error) {
+    return { status: 500, message: 'Internal server error' };
+  }
+};
+
 export const onGetGroupChannels = async (groupId: string) => {
   try {
     const channels = await client.channel.findMany({
@@ -153,6 +232,31 @@ export const onGetGroupSubscriptions = async (groupId: string) => {
     }
 
     return { status: 404, message: 'Subscriptions not found' };
+  } catch (error) {
+    return { status: 500, message: 'Internal server error' };
+  }
+};
+
+export const onGetAllGroupMembers = async (groupId: string) => {
+  try {
+    const user = await onAuthenticatedUser();
+    const members = await client.members.findMany({
+      where: {
+        groupId,
+        NOT: {
+          userId: user.id,
+        },
+      },
+      include: {
+        User: true,
+      },
+    });
+
+    if (members && members.length > 0) {
+      return { status: 200, members };
+    }
+
+    return { status: 404, message: 'Members not found' };
   } catch (error) {
     return { status: 500, message: 'Internal server error' };
   }
