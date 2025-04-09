@@ -6,6 +6,7 @@ import {
   onGetGroupSubscriptions,
   onGetUserGroups,
 } from '@/actions/groups';
+import Sidebar from '@/components/global/sidebar';
 import {
   dehydrate,
   HydrationBoundary,
@@ -59,7 +60,9 @@ const GroupLayout = async ({ children, params }: Props) => {
 
   return (
     <HydrationBoundary state={dehydrate(query)}>
-      <div className='flex h-screen md:pt-5'></div>
+      <div className='flex h-screen md:pt-5'>
+        <Sidebar groupid={groupid} userid={user.id as string} />
+      </div>
     </HydrationBoundary>
   );
 };

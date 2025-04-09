@@ -24,6 +24,7 @@ const eslintConfig = [
       '@next/next/no-img-element': 'off',
       'react-hooks/exhaustive-deps': 'off',
       'no-var': 'off',
+      '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
     },
   },
 ];
