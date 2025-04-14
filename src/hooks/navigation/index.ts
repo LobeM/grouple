@@ -16,7 +16,7 @@ export const useNavigation = () => {
   };
 };
 
-export const useSidebar = (groupId: string) => {
+export const useSideBar = (groupid: string) => {
   const { data: groups } = useQuery({
     queryKey: ['user-groups'],
   }) as { data: IGroups };
@@ -27,14 +27,13 @@ export const useSidebar = (groupId: string) => {
 
   const { data: channels } = useQuery({
     queryKey: ['group-channels'],
-    queryFn: () => onGetGroupChannels(groupId),
+    queryFn: () => onGetGroupChannels(groupid),
   });
 
   const client = useQueryClient();
 
-  // we use usemutation to optimistically add a channel
-  // once the mutation is settled or complete we invalidate the group-channel query and trigger a refetch
-  // this makes the optimistic ui seamless
+  //we use usemutation to optimistically add a channel
+  //once the mutation is settled or complete we invalidate the group-channel query and trigger a refetch //this makes the optimistic ui seamless
 
   const { isPending, mutate, isError, variables } = useMutation({
     mutationFn: (data: {
@@ -44,13 +43,13 @@ export const useSidebar = (groupId: string) => {
       createdAt: Date;
       groupId: string | null;
     }) =>
-      onCreateNewChannel(groupId, {
+      onCreateNewChannel(groupid, {
         id: data.id,
         name: data.name.toLowerCase(),
         icon: data.icon,
       }),
     onSettled: async () => {
-      return client.invalidateQueries({
+      return await client.invalidateQueries({
         queryKey: ['group-channels'],
       });
     },
@@ -63,7 +62,7 @@ export const useSidebar = (groupId: string) => {
 
   if (isError)
     toast('Error', {
-      description: 'Oops! Something went wrong',
+      description: 'Oops! something went wrong',
     });
 
   return { groupInfo, groups, mutate, variables, isPending, channels };

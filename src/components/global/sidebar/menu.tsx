@@ -1,9 +1,11 @@
 'use client';
 
 import { IChannels } from '@/components/global/sidebar';
+import { Input } from '@/components/ui/input';
 import { SIDEBAR_SETTINGS_MENU } from '@/constants/menus';
 import { useChannelInfo } from '@/hooks/channels';
 import { cn } from '@/lib/utils';
+import { TrashIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { RefObject } from 'react';
@@ -130,7 +132,36 @@ const SidebarMenu = ({
                         mode={currentPage === channel.id ? 'LIGHT' : 'DARK'}
                       />
                     )}
+                    {channel.id === current && edit ? (
+                      <Input
+                        type='text'
+                        ref={inputRef}
+                        className='bg-transparent p-0 text-lg m-0 h-full'
+                      />
+                    ) : (
+                      <p
+                        className={cn(
+                          'text-lg capitalize',
+                          currentPage === channel.id
+                            ? 'text-white'
+                            : 'text-themeTextGray'
+                        )}
+                      >
+                        {isPending && variables && current === channel.id
+                          ? variables.name
+                          : channel.name}
+                      </p>
+                    )}
                   </div>
+                  {channel.name !== 'general' &&
+                    channel.name !== 'announcements' &&
+                    userId === groupUserId && (
+                      <TrashIcon
+                        onClick={() => onChannelDelete(channel.id)}
+                        className='group-hover:inline hidden content-end text-themeTextGray hover:text-gray-400'
+                        size={16}
+                      />
+                    )}
                 </Link>
               )
           )}

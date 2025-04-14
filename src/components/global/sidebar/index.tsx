@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { useGroupChatOnline } from '@/hooks/groups';
-import { useSidebar } from '@/hooks/navigation';
+import { useSideBar } from '@/hooks/navigation';
 import { CarotSort } from '@/icons/carot-sort';
 import { cn } from '@/lib/utils';
 import { GroupIcon, PlusIcon } from 'lucide-react';
@@ -59,7 +59,7 @@ export interface IGroups {
 
 const Sidebar = ({ groupid, userid, mobile }: Props) => {
   const { groupInfo, groups, mutate, variables, isPending, channels } =
-    useSidebar(groupid);
+    useSideBar(groupid);
 
   useGroupChatOnline(userid);
 
