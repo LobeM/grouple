@@ -2,6 +2,7 @@
 
 import { CreateGroupSchema } from '@/components/forms/create-group/schema';
 import { client } from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 import { onAuthenticatedUser } from './auth';
@@ -312,6 +313,86 @@ export const onSearchGroups = async (
     }
 
     return { status: 400, message: 'Invalid search mode' };
+  } catch (error) {
+    return { status: 500, message: 'Internal server error' };
+  }
+};
+
+export const onUpdateGroupSettings = async (
+  groupId: string,
+  type:
+    | 'IMAGE'
+    | 'ICON'
+    | 'NAME'
+    | 'DESCRIPTION'
+    | 'JSONDESCRIPTION'
+    | 'HTMLDESCRIPTION',
+  content: string,
+  path: string
+) => {
+  try {
+    if (type === 'IMAGE') {
+      await client.group.update({
+        where: {
+          id: groupId,
+        },
+        data: {
+          thumbnail: content,
+        },
+      });
+    }
+    if (type === 'ICON') {
+      await client.group.update({
+        where: {
+          id: groupId,
+        },
+        data: {
+          icon: content,
+        },
+      });
+    }
+    if (type === 'NAME') {
+      await client.group.update({
+        where: {
+          id: groupId,
+        },
+        data: {
+          name: content,
+        },
+      });
+    }
+    if (type === 'DESCRIPTION') {
+      await client.group.update({
+        where: {
+          id: groupId,
+        },
+        data: {
+          description: content,
+        },
+      });
+    }
+    if (type === 'JSONDESCRIPTION') {
+      await client.group.update({
+        where: {
+          id: groupId,
+        },
+        data: {
+          jsonDescription: content,
+        },
+      });
+    }
+    if (type === 'HTMLDESCRIPTION') {
+      await client.group.update({
+        where: {
+          id: groupId,
+        },
+        data: {
+          htmlDescription: content,
+        },
+      });
+    }
+    revalidatePath(path);
+    return { status: 200, message: 'Group settings updated successfully' };
   } catch (error) {
     return { status: 500, message: 'Internal server error' };
   }

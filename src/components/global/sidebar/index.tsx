@@ -77,7 +77,11 @@ const Sidebar = ({ groupid, userid, mobile }: Props) => {
             <div className='w-full flex items-center justify-between text-themeTextGray md:border-[1px] border-themeGray p-3 rounded-xl'>
               <div className='flex gap-x-3 items-center'>
                 <img
-                  src={`https://ucarecdn.com/${groupInfo.group?.icon as string}/`}
+                  src={
+                    groupInfo.group?.icon
+                      ? `https://ucarecdn.com/${groupInfo.group?.icon}/`
+                      : 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'
+                  }
                   alt='icon'
                   className='w-10 rounded-lg'
                 />
