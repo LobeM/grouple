@@ -398,6 +398,30 @@ export const onUpdateGroupSettings = async (
   }
 };
 
+export const onGetExploreGroup = async (category: string, paginate: number) => {
+  try {
+    const groups = await client.group.findMany({
+      where: {
+        category,
+        NOT: {
+          description: null,
+          thumbnail: null,
+        },
+      },
+      take: 6,
+      skip: paginate || 0,
+    });
+
+    if (groups && groups.length > 0) {
+      return { status: 200, groups };
+    }
+
+    return { status: 404, message: 'No groups found for this category' };
+  } catch (error) {
+    return { status: 500, message: 'Internal server error' };
+  }
+};
+
 export const onJoinGroup = async (groupId: string) => {
   try {
     const user = await onAuthenticatedUser();
